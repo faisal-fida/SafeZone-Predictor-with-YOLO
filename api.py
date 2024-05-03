@@ -5,10 +5,13 @@ import os
 import cv2
 
 if not os.path.exists('best.pt'):
-    model_url = 'https://drive.afzalsa571.workers.dev/download.aspx?file=j8p8Wc4%2F56r78o%2BJQV1r9o6Zn6%2BgEmEtELsGPWgJao4n4ZWwKheV48f%2BaiITP%2BFW&expiry=0Gy8Z2dE2IL5dLIOvGFXXQ%3D%3D&mac=33998b834c196b4fa47bb3434a26d5d6ef3f28eca949211e5ffcbab3e57f477e'
-    os.system(f'wget {model_url} -O best.pt')
+    print("Model file `best.pt` not found in the current directory")
+    input("Add the model file and press any key to continue...")
 
 app = FastAPI()
+
+if not os.path.exists('best.pt'):
+    raise Exception("Model not found")
 
 model = YOLO('best.pt')
 
@@ -41,7 +44,6 @@ async def predict(file: UploadFile = File(...)):
     response = {
         "image": image_path,
         "predictions": class_names[int(classes)],
-        "class_names": class_names
     }
     
     return JSONResponse(content=response)
